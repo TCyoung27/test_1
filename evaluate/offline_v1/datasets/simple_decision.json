@@ -1,0 +1,121 @@
+{
+  "schema_version": "v1",
+  "dataset_name": "simple_decision",
+  "description": "简单决策正确率评估数据集",
+  "samples": [
+    {
+      "id": "simple_camera_save_001",
+      "metric": "simple_decision",
+      "user_instruction": "保存一帧 RGB-D 数据",
+      "initial_state": {
+        "camera": "STOPPED"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "camera",
+        "save",
+        "precondition"
+      ],
+      "notes": "相机关闭时，保存前需要先启动相机"
+    },
+    {
+      "id": "simple_camera_save_002",
+      "metric": "simple_decision",
+      "user_instruction": "保存一帧 RGB-D 数据",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "camera",
+        "save",
+        "running"
+      ],
+      "notes": "相机已启动时可直接保存"
+    },
+    {
+      "id": "simple_arm_collect_001",
+      "metric": "simple_decision",
+      "user_instruction": "让机械臂移动到采集位",
+      "initial_state": {
+        "arms_connected": false
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_collect"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "arm",
+        "collect",
+        "precondition"
+      ],
+      "notes": "机械臂未连接时需要先连接"
+    },
+    {
+      "id": "simple_arm_collect_002",
+      "metric": "simple_decision",
+      "user_instruction": "让机械臂移动到采集位",
+      "initial_state": {
+        "arms_connected": true
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_collect"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "arm",
+        "collect",
+        "connected"
+      ],
+      "notes": "机械臂已连接时可直接执行动作"
+    }
+  ]
+}

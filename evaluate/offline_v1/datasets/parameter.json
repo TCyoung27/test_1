@@ -1,0 +1,122 @@
+{
+  "schema_version": "v1",
+  "dataset_name": "parameter",
+  "description": "参数正确率评估数据集",
+  "samples": [
+    {
+      "id": "param_action_001",
+      "metric": "parameter",
+      "user_instruction": "让机械臂移动到采集位",
+      "initial_state": {
+        "arms_connected": true
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_collect"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "tool_and_args",
+      "tags": [
+        "arm",
+        "action_id",
+        "collect"
+      ],
+      "notes": "评估 Execute_Action 的 action_id 参数"
+    },
+    {
+      "id": "param_action_002",
+      "metric": "parameter",
+      "user_instruction": "让机械臂回到初始位",
+      "initial_state": {
+        "arms_connected": true
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_initial"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "tool_and_args",
+      "tags": [
+        "arm",
+        "action_id",
+        "initial"
+      ],
+      "notes": "评估 Execute_Action 的回初始位动作参数"
+    },
+    {
+      "id": "param_lift_001",
+      "metric": "parameter",
+      "user_instruction": "把滑台升到 120 毫米",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 120
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "tool_and_args",
+      "tags": [
+        "base",
+        "lift",
+        "height_mm"
+      ],
+      "notes": "评估 Set_Lift_Height 的高度参数"
+    },
+    {
+      "id": "param_nav_001",
+      "metric": "parameter",
+      "user_instruction": "导航到采集点5",
+      "initial_state": {
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "tool_and_args",
+      "tags": [
+        "base",
+        "navigation",
+        "waypoint_id"
+      ],
+      "notes": "评估 Navigate_To_Point 的 waypoint_id 参数"
+    }
+  ]
+}

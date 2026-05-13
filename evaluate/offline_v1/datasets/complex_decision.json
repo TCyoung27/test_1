@@ -1,0 +1,200 @@
+{
+  "schema_version": "v1",
+  "dataset_name": "complex_decision",
+  "description": "复杂决策正确率评估数据集",
+  "samples": [
+    {
+      "id": "complex_collect_001",
+      "metric": "complex_decision",
+      "user_instruction": "去采集点5采集 RGB-D 数据",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_collect"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_initial"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "full_task",
+        "phenotype_collection",
+        "rgbd"
+      ],
+      "notes": "完整采集主链路"
+    },
+    {
+      "id": "complex_collect_002",
+      "metric": "complex_decision",
+      "user_instruction": "去采集点5采集 RGB-D 数据",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_collect"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_initial"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "full_task",
+        "reuse_state",
+        "rgbd"
+      ],
+      "notes": "相机已开且机械臂已连接时的简化采集链路"
+    },
+    {
+      "id": "complex_collect_003",
+      "metric": "complex_decision",
+      "user_instruction": "去采集点5并让机械臂到采集位",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "r_collect"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "scoring_mode": "ordered_calls",
+      "tags": [
+        "navigation",
+        "arm",
+        "collect_pose"
+      ],
+      "notes": "导航加采集前就位，不涉及相机保存"
+    }
+  ]
+}

@@ -65,7 +65,7 @@
     JPEG 编码质量，默认 `30`。
   返回内容通常为两个文本块，分别是 RGB JPEG 的 Base64 和 Depth 伪彩色 JPEG 的 Base64；若无帧，可能返回 `NO_FRAME`。
 - `Save_Frames`
-  启动 RealSense 相机并在后台保存指定时长的帧数据（RGB/Depth），线程内部自动计时结束。
+  在后台保存指定时长的帧数据（RGB/Depth），线程内部自动计时结束。
   参数：
   - `save_dir: str`
     保存目录，默认 `./capture`。

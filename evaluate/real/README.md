@@ -1,115 +1,284 @@
-# 真实评测数据集数量记录
+# 真实任务评测数据集设计说明
 
-本文档记录当前真实评测数据集的已构建样本数量，后续扩展数据集时同步更新。
+本目录用于存放作物表型采集智能体的真实任务评测数据集。真实评测数据集面向 MCP 工具、机器人底盘、滑台、机械臂与 RealSense 相机的实际执行过程，主要用于支撑论文中的真实系统评估。
 
-## 1. 当前已构建数据集
+真实评测数据集不追求和离线评估一样完全自动判分，而是结合 `AgentTraceMiddleware` 生成的 trace、人工审查和后续 LLM 辅助评分，评估 Agent 在真实环境中的任务完成能力、协同控制能力和异常处理能力。
 
-### phenotype_simple.json
+## 1. 数据集文件规划
 
-当前版本样本总数：
-
-```text
-162 条
-```
-
-按主样本编号统计：
-
-| 类别 | 样本编号范围 | 数量 | 说明 |
-|---|---|---:|---|
-| `camera` | `real_simple_camera_001` - `real_simple_camera_050` | 50 | 已基本按当前设计一次到位 |
-| `arm` | `real_simple_arm_001` - `real_simple_arm_044` | 44 | 覆盖右臂、左臂和双臂关机相关动作 |
-| `navigation` | `real_simple_navigation_001` - `real_simple_navigation_020` | 20 | 当前基于已有 10 个 `point_collect_*` 点位设计 |
-| `lift` | `real_simple_lift_001` - `real_simple_lift_020` | 20 | 已覆盖 0-250mm 范围内多个高度和表达 |
-| `safety` | `real_simple_safety_001` - `real_simple_safety_028` | 28 | 新增 safety 主样本 |
-| **合计** |  | **162** |  |
-
-按 `task_type` 标签展开统计时，部分样本会同时属于多个模块。例如 safety 样本可能同时带有 `camera`、`arm`、`navigation` 标签。
-
-当前展开统计：
-
-| 标签 | 数量 |
-|---|---:|
-| `camera` | 60 |
-| `arm` | 53 |
-| `navigation` | 29 |
-| `safety` | 30 |
-| `lift` | 20 |
-
-说明：
-
-- `safety` 标签总数为 30，其中 28 条是 `real_simple_safety_*` 主样本，另外 2 条来自 `real_simple_arm_021` 和 `real_simple_arm_022`。
-- `camera`、`arm`、`navigation` 的标签数量大于主样本数量，是因为部分 safety 样本同时带有硬件模块标签。
-- 当前 simple 已按“单模块、单目标任务”收束；原先显式多步骤或多模块停止表达已改写为单目标表达，或补充到 basic 数据集中。
-- 机械臂新增 `real_simple_arm_025` - `real_simple_arm_044`，覆盖左臂配置与连接、左臂 `l_shutdown / l_initial / l_collect`、左臂动作查询，以及双臂关机动作查询和执行。
-
-### phenotype_basic.json
-
-当前版本样本总数：
+正式真实任务评测数据集按任务难度和异常专项拆分为四个文件：
 
 ```text
-149 条
+evaluate/real/datasets/
+├── phenotype_simple.json
+├── phenotype_basic.json
+├── phenotype_complex.json
+└── exception_handling.json
 ```
 
-按主样本编号统计：
+四类数据集定位如下：
 
-| 类别 | 样本编号范围 | 数量 | 说明 |
-|---|---|---:|---|
-| `camera` 单模块多步骤 | `real_basic_camera_001` - `real_basic_camera_020` | 20 | 相机状态、启动、保存、预览、停止等短链路 |
-| `arm` 单模块多步骤 | `real_basic_arm_001` - `real_basic_arm_034` | 34 | 右臂、左臂和少量双臂连接、状态、动作、释放等短链路 |
-| `navigation` 单模块多步骤 | `real_basic_navigation_001` - `real_basic_navigation_014` | 14 | 点位查询、导航、取消、记录当前位置 |
-| `navigation + lift` | `real_basic_navigation_lift_001` - `real_basic_navigation_lift_016` | 16 | 到点后设置滑台高度 |
-| `arm + camera` | `real_basic_arm_camera_001` - `real_basic_arm_camera_026` | 26 | 右臂/左臂动作、双臂关机与相机预览/保存/关闭协同 |
-| `navigation + camera` | `real_basic_navigation_camera_001` - `real_basic_navigation_camera_012` | 12 | 到点后相机预览、状态查询或保存 |
-| `navigation + arm` | `real_basic_navigation_arm_001` - `real_basic_navigation_arm_014` | 14 | 到点后连接或执行右臂、左臂、双臂代表性动作 |
-| 其他边界组合 | `real_basic_boundary_001` - `real_basic_boundary_008` | 8 | `lift + camera`、`lift + arm` 等两模块边界组合 |
-| `lift` 单模块多步骤 | `real_basic_lift_001` | 1 | 滑台两段高度调整 |
-| `safety` 两模块停止 | `real_basic_safety_001` - `real_basic_safety_004` | 4 | 两个硬件模块以内的安全停止短链路 |
-| **合计** |  | **149** |  |
+| 数据集 | 定位 | 主要关注点 |
+|---|---|---|
+| `phenotype_simple.json` | 单模块、单工具或单模块单目标任务 | 单设备基础控制能力、工具边界、参数表达和语义丰富性 |
+| `phenotype_basic.json` | 两模块以内协同任务，或单模块多步骤任务 | 前置状态判断、简单协同、参数填写和短链路执行 |
+| `phenotype_complex.json` | 三模块及以上协同任务，或完整/近完整表型采集任务 | 多设备协同、完整采集链路、状态复用和任务收尾 |
+| `exception_handling.json` | 异常处理专项任务 | 失败重试、失败终止、安全中断和依赖步骤保护 |
 
-按 `task_type` 标签展开统计：
+硬件模块不通过文件名区分，而是通过每条样本的 `task_type` 字段区分，例如 `camera`、`arm`、`navigation`、`lift`、`safety`、`exception`。
 
-| 标签 | 数量 |
+## 2. 建议样本规模
+
+面向论文和后续小论文级数据集，建议正式数据集规模约为 620 条：
+
+| 数据集 | 建议样本量 | 说明 |
+|---|---:|---|
+| `phenotype_simple.json` | 200 左右 | 覆盖所有核心 MCP 工具的不同语义、参数和边界表达 |
+| `phenotype_basic.json` | 180 左右 | 覆盖两模块协同、单模块多步骤、左臂/双臂代表性短链路 |
+| `phenotype_complex.json` | 160 左右 | 覆盖完整表型采集、多点采集、状态复用和不同收尾要求 |
+| `exception_handling.json` | 80 左右 | 覆盖导航、机械臂、相机、滑台和安全中断等异常场景 |
+| **合计** | **约 620** | 正式数据集规模，可根据实机条件抽样执行 |
+
+真实硬件测试成本较高，因此可以采用“完整数据集设计 + 分层抽样实机验证”的方式：
+
+```text
+正式数据集：约 620 条
+实机评测子集：约 150-200 条
+```
+
+实机评测子集应按 difficulty、task_type 和任务形态分层抽样，避免只抽取某一类简单任务。
+
+## 3. 样本字段约定
+
+每个数据集文件建议使用统一结构：
+
+```json
+{
+  "schema_version": "real_v1",
+  "dataset_name": "phenotype_simple",
+  "description": "真实任务 simple 难度评测数据集",
+  "samples": [
+    {
+      "id": "real_simple_camera_001",
+      "task_type": ["camera"],
+      "difficulty": "simple",
+      "user_instruction": "启动 RealSense 相机，并确认视觉模块进入运行状态。",
+      "initial_state": {},
+      "success_criteria": [
+        "调用相机启动相关工具",
+        "最终回复说明相机已进入运行状态或返回实际状态"
+      ],
+      "notes": ""
+    }
+  ]
+}
+```
+
+字段说明：
+
+| 字段 | 说明 |
+|---|---|
+| `schema_version` | 当前建议使用 `real_v1` |
+| `dataset_name` | 数据集名称，例如 `phenotype_simple` |
+| `description` | 数据集说明 |
+| `samples` | 样本列表 |
+| `id` | 样本唯一编号，用于结果文件命名和统计引用 |
+| `task_type` | 任务涉及模块，使用字符串数组 |
+| `difficulty` | 难度，取值为 `simple`、`basic`、`complex` |
+| `user_instruction` | 输入给 Agent 的自然语言指令 |
+| `initial_state` | 任务开始前希望设置或假定的设备状态，可为空 |
+| `success_criteria` | 人工审查和后续 LLM 辅助评分依据 |
+| `notes` | 现场注意事项或特殊说明 |
+
+## 4. difficulty 约定
+
+| 难度 | 含义 | 示例 |
+|---|---|---|
+| `simple` | 单模块、单目标任务 | 启动相机、查询机械臂状态、导航到一个点位、设置一次滑台高度 |
+| `basic` | 两模块以内的简单协同，或单模块多步骤 | 右臂到采集位后保存 RGB-D、到点后设置滑台高度、相机启动后保存并停止 |
+| `complex` | 三模块及以上协同，或完整/近完整表型采集链路 | 导航到采集点，设置滑台高度，右臂到采集位，保存 RGB-D，采集后复位 |
+
+划分边界：
+
+- `simple` 只保留单模块、单目标任务。用户指令中不应显式要求“先 A 再 B”“A 后关闭/查询/复位”等多步骤链路。
+- `simple` 可以通过 `setup_steps` 控制初始状态，例如先由评测脚本确保相机处于 `RUNNING`，再让 Agent 执行单一保存或预览目标。
+- `basic` 承接同一模块内的显式多步骤任务，以及两个模块以内的短链路协同任务。
+- 多模块安全停止如果只涉及两个硬件模块，可放入 `basic`；涉及三个及以上模块或失败恢复策略时，优先放入 `exception_handling.json`。
+- 涉及 `Save_Frames` 的正向保存任务，建议在 `user_instruction` 和 `success_criteria` 中同时明确 `save_dir`，目录优先使用 `./capture/<sample_id>`，便于实机结果审查。
+
+`exception_handling.json` 中的样本也可以标注 `difficulty`，但其核心评估指标是异常处理正确率，而不是普通任务完成率。
+
+## 5. task_type 标签
+
+推荐使用以下标签：
+
+| 标签 | 含义 |
+|---|---|
+| `camera` | RealSense 相机启动、停止、状态查询、图像保存或实时帧获取 |
+| `arm` | 机械臂连接、状态查询、动作执行、复位或急停 |
+| `navigation` | 小车底盘点位查询、导航、取消导航 |
+| `lift` | 滑台高度控制 |
+| `safety` | 急停、停止、危险中断类任务 |
+| `exception` | 异常处理专项任务 |
+
+示例：
+
+```json
+"task_type": ["camera"]
+```
+
+```json
+"task_type": ["navigation", "lift", "arm", "camera"]
+```
+
+```json
+"task_type": ["navigation", "arm", "camera", "exception"]
+```
+
+## 6. phenotype_simple 设计建议
+
+`phenotype_simple.json` 建议约 200 条，重点不是流程复杂，而是覆盖单工具、参数、语义表达和工具边界。
+
+建议分布：
+
+| 模块 | 建议数量 | 覆盖内容 |
+|---|---:|---|
+| `camera` | 50 | `Start_Camera`、`Stop_Camera`、`Get_Camera_Status`、`Get_Latest_Frame`、`Save_Frames` |
+| `arm` | 65 | `Get_Arm_Profile`、`Connect_Arms`、`Get_Arm_Status`、`Get_Arm_Actions`、`Execute_Action`、`Disconnect_Arms`、`Emergency_Stop` |
+| `navigation` | 55 | `Get_Local_Waypoints`、`Navigate_To_Point`、`Capture_Current_Point`、`Cancel_Navigation` |
+| `lift` | 20 | `Set_Lift_Height` 的不同高度、不同表达和边界语义 |
+| `safety` | 30 | 急停类的不同表达 |
+| **合计** | **220** |  |
+
+设计重点：
+
+- 同一工具使用多种自然语言表达。
+- 覆盖有参数和无参数场景。
+- 覆盖工具边界，例如 `Get_Latest_Frame` 与 `Save_Frames`、`Get_Arm_Actions` 与 `Execute_Action`、`Get_Local_Waypoints` 与 `Navigate_To_Point`。
+- 保持用户目标单一；显式包含两个动作目标的样本应放入 `phenotype_basic.json`。
+- 不要只靠同义改写堆样本，应同时覆盖不同参数、不同任务目标和不同初始状态。
+
+## 7. phenotype_basic 设计建议
+
+`phenotype_basic.json` 建议约 180 条，重点是两模块以内协同和单模块多步骤。该数量是上限附近的规划值，后续扩充不追求把左臂、右臂、双臂和所有点位排列组合完全穷举；优先补代表性强、差异明确、真实可执行的短链路样本。
+
+建议分布：
+
+| 类型 | 建议数量 | 示例 |
+|---|---:|---|
+| 相机单模块多步骤 | 20-25 | 查询状态、启动、保存、停止 |
+| 机械臂单模块多步骤 | 35-45 | 右臂/左臂连接、动作库查询、执行动作、释放连接，少量双臂关机短链路 |
+| 导航单模块多步骤 | 18-24 | 查询点位、导航、取消、记录点位 |
+| 滑台单模块多步骤 | 6-10 | 先降到一个高度，再升到另一个高度 |
+| 导航 + 滑台 | 20-24 | 到点后设置滑台高度 |
+| 机械臂 + 相机 | 30-36 | 右臂或左臂到采集位后保存 RGB-D |
+| 导航 + 相机 | 14-18 | 到点后仅保存相机数据 |
+| 导航 + 机械臂 | 18-24 | 到点后执行右臂或左臂动作 |
+| 其他边界组合与两模块安全停止 | 14-20 | 滑台 + 相机、滑台 + 机械臂、机械臂 + 相机停止等 |
+| **合计** | **约 180** | 最多控制在 180 左右，可按实机条件微调 |
+
+设计重点：
+
+- 根据初始状态决定是否补齐前置步骤。
+- 已满足的状态不要重复执行。
+- 区分相机-only 和表型采集任务。
+- 控制链路长度，避免变成完整复杂任务。
+- 左臂和双臂扩充采用代表性覆盖，不对右臂已有样本做机械复制；后续若继续扩充，应优先补导航点、写入类短链路和两模块边界组合。
+- 导航相关样本可在后续采集点扩展后再补，不需要在当前 10 个 `point_collect_*` 上过度堆同义样本。
+
+## 8. phenotype_complex 设计建议
+
+`phenotype_complex.json` 建议约 160 条，重点是完整或近完整表型采集链路。
+
+建议分布：
+
+| 类型 | 建议数量 | 示例 |
+|---|---:|---|
+| 标准完整单点采集 | 30 | 导航、可选滑台、右臂采集位、相机保存、右臂复位 |
+| 不同滑台高度组合 | 25 | 0-250mm 范围内不同高度 |
+| 不同采集时长或保存要求 | 20 | 5 秒、10 秒、15 秒、指定目录、默认参数 |
+| 不同初始状态 | 25 | 相机已运行、机械臂已连接、点位已知、动作已知 |
+| 不同收尾要求 | 25 | 右臂复位、停止相机、断开机械臂、返回起点 |
+| 多点连续采集 | 20 | 连续采集两个或多个点位，复用设备状态 |
+| 边界任务 | 15 | 相机-only 与完整表型采集边界、部分流程任务 |
+| **合计** | **160** |  |
+
+设计重点：
+
+- 一个采集点可以对应多个样本，只要任务目标、初始状态、硬件组合、参数或收尾要求不同。
+- 不要把 expected 行为直接写进用户输入，但要保证任务目标清楚。
+- 滑台高度应属于到达点位后的局部采集准备。
+- 完整表型采集默认包含机械臂采集位动作和 RGB-D 保存。
+- 相机未运行时，保存前应先启动相机。
+- 关键步骤失败时，后续依赖步骤应终止；该类场景主要放入异常专项数据集。
+
+## 9. exception_handling 设计建议
+
+`exception_handling.json` 建议约 80 条，用于评估异常处理正确率。
+
+建议分布：
+
+| 异常类型 | 建议数量 | 示例 |
+|---|---:|---|
+| 导航失败 / 到点失败 / 取消导航 | 18 | 导航失败后不继续机械臂和相机采集 |
+| 机械臂连接失败 / 动作失败 / 急停 | 18 | 连接失败后不执行动作，动作失败后不保存 |
+| 相机启动失败 / 保存失败 / 状态不一致 | 14 | 启动失败后不保存，保存失败后说明原因 |
+| 滑台不到位 / 高度异常 | 10 | 滑台不到位后不继续依赖步骤 |
+| 多设备关键步骤失败 | 12 | 复杂链路中某关键步骤失败后正确终止 |
+| 安全中断 / 停止所有设备 | 8 | 按模块优先级停止设备 |
+| **合计** | **80** |  |
+
+异常专项任务的成功标准是“异常后处理是否正确”，不是原始任务是否完整完成。
+
+## 10. 设计原则
+
+### 10.1 不只靠同义改写堆样本
+
+样本扩充应同时覆盖：
+
+- 工具边界；
+- 参数类型；
+- 初始状态；
+- 前置条件；
+- 多设备组合；
+- 语义表达差异；
+- 部分任务和完整任务边界；
+- 采集后收尾动作差异。
+
+### 10.2 语义自然但目标明确
+
+用户输入应尽量接近真实使用方式，不要像标准答案一样把工具链路完全写出。但也要避免“处理一下”“采一下”“回去”等对象不清的表达。
+
+### 10.3 参数来源要清楚
+
+任务中的关键参数应来自用户输入、现场配置、数据集 `initial_state` 或工具查询结果。不要要求模型凭空生成不存在的点位、动作 ID、IP 或目录。
+
+### 10.4 真实评测以 Trace 审查为主
+
+真实评测不强制要求工具调用序列和标准 JSON 完全一致。每条任务运行后，以 `AgentTraceMiddleware` 生成的 trace 为核心证据，结合 `success_criteria` 进行人工审查。
+
+## 11. 实机评测子集建议
+
+如果完整数据集无法全部实机运行，建议使用分层抽样。
+
+推荐实机子集规模：
+
+```text
+150-200 条
+```
+
+建议抽样比例：
+
+| 数据集 | 抽样数量 |
 |---|---:|
-| `camera` | 65 |
-| `arm` | 81 |
-| `navigation` | 58 |
-| `lift` | 25 |
-| `safety` | 4 |
+| `phenotype_simple.json` | 50-70 |
+| `phenotype_basic.json` | 40-50 |
+| `phenotype_complex.json` | 40-60 |
+| `exception_handling.json` | 20-30 |
 
-说明：
+抽样时应保证：
 
-- 当前 basic 已加入左臂和双臂代表性短链路，不对右臂已有样本做机械复制。
-- 当前导航样本只使用已有 `point_collect_1` 到 `point_collect_10`。
-- basic 中允许一个 MCP 硬件服务内多个工具调用，例如相机的“查询状态 -> 启动 -> 保存”，机械臂的“连接 -> 查询状态 -> 执行动作”。
-- basic 新增少量滑台单模块多步骤和两模块安全停止样本，用于承接从 simple 中收束出的显式多步骤能力。
-
-## 2. 当前设计限制
-
-当前 `phenotype_simple.json` 和 `phenotype_basic.json` 未强行补满 README 中的规划数量，主要原因如下：
-
-1. **机械臂**
-   - 当前 simple 已包含右臂、左臂和双臂关机相关样本。
-   - 右臂动作主要包括 `r_shutdown`、`r_initial`、`r_collect`、`r_wave`。
-   - 左臂动作主要包括 `l_shutdown`、`l_initial`、`l_collect`。
-   - 双臂当前只设计关机动作样本，不区分同时或顺序关机。
-
-2. **导航**
-   - 当前 `waypoints.json` 中已有 10 个真实采集点：`point_collect_1` 到 `point_collect_10`。
-   - 后续点位扩展后，可继续补充更多导航语义和点位组合样本。
-
-3. **写入类任务**
-   - `Capture_Current_Point` 会写入 `waypoints.json`，当前只保留少量样本。
-   - `Capture_Current_Joint_Point` 会写入机械臂关节点库，且重复运行可能与已有 `point_id` 冲突，当前 simple 数据集暂未纳入。
-
-## 3. 后续扩展方向
-
-后续若硬件和配置完善，可按以下方向扩展：
-
-| 数据集 | 当前数量 | 规划目标 | 后续重点 |
-|---|---:|---:|---|
-| `phenotype_simple.json` | 162 | 200 左右 | 扩展更多导航点、更多写入类任务和机械臂动作语义 |
-| `phenotype_basic.json` | 149 | 180 左右 | 继续扩展更多导航点组合、写入类短链路和少量两模块边界组合 |
-| `phenotype_complex.json` | 待整理 | 160 左右 | 完整表型采集、多点采集、状态复用 |
-| `exception_handling.json` | 0 | 80 左右 | 失败重试、失败终止、安全中断 |
-
-当前阶段建议先基于 `phenotype_simple.json` 和 `phenotype_basic.json` 跑通基础真实评测流程，再继续整理 `phenotype_complex.json`。
+- 四类难度/专项都有覆盖；
+- 四类硬件模块都有覆盖；
+- 不同初始状态都有覆盖；
+- 复杂任务中不同采集点、滑台高度、采集时长和收尾要求都有覆盖。

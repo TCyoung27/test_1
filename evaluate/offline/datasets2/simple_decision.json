@@ -1,0 +1,1303 @@
+{
+  "schema_version": "v1",
+  "dataset_name": "simple_decision",
+  "description": "简单决策正确率评估数据集：评估智能体能否根据用户指令、初始状态和技能说明补齐必要前置步骤，并避免无关或重复调用。",
+  "samples": [
+    {
+      "id": "simple_camera_save_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "保存一帧 RGB-D 数据到本地。",
+      "initial_state": {
+        "camera": "STOPPED"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "save",
+        "precondition"
+      ],
+      "notes": "相机未运行时，保存前需要先启动相机。"
+    },
+    {
+      "id": "simple_camera_save_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "保存一帧 RGB-D 数据到本地。",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "save",
+        "running"
+      ],
+      "notes": "相机已运行时，可直接保存帧数据。"
+    },
+    {
+      "id": "simple_camera_preview_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "查看当前相机画面，不需要保存。",
+      "initial_state": {
+        "camera": "STOPPED"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "preview",
+        "precondition"
+      ],
+      "notes": "相机未运行时，实时查看前需要先启动相机。"
+    },
+    {
+      "id": "simple_camera_preview_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "查看当前相机画面，不需要保存。",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "preview",
+        "running"
+      ],
+      "notes": "相机已运行时，可直接获取最新帧。"
+    },
+    {
+      "id": "simple_camera_status_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "检查相机当前是否在运行。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Camera_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "status"
+      ],
+      "notes": "用户只要求检查相机状态，应调用状态查询工具。"
+    },
+    {
+      "id": "simple_camera_start_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "启动相机。",
+      "initial_state": {
+        "camera": "STOPPED"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "start"
+      ],
+      "notes": "明确启动相机，且当前相机未运行。"
+    },
+    {
+      "id": "simple_camera_stop_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "关闭相机。",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "stop"
+      ],
+      "notes": "明确关闭相机，且当前相机正在运行。"
+    },
+    {
+      "id": "simple_camera_save_duration_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "保存 15 秒 RGB-D 数据。",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 15
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "save",
+        "duration_seconds"
+      ],
+      "notes": "相机已运行，用户明确给出保存时长，应直接保存并填写时长参数。"
+    },
+    {
+      "id": "simple_arm_collect_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂移动到采集位。",
+      "initial_state": {
+        "arms_connected": false,
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_collect_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "collect_pose",
+        "precondition"
+      ],
+      "notes": "机械臂未连接时，需要先连接，再执行采集位动作。"
+    },
+    {
+      "id": "simple_arm_collect_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂移动到采集位。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_collect_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "collect_pose",
+        "connected"
+      ],
+      "notes": "机械臂已连接时，可直接执行采集位动作。"
+    },
+    {
+      "id": "simple_arm_initial_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂回到初始位。",
+      "initial_state": {
+        "arms_connected": false,
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_initial_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "initial_pose",
+        "precondition"
+      ],
+      "notes": "机械臂未连接时，需要先连接，再执行初始位动作。"
+    },
+    {
+      "id": "simple_arm_initial_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂回到初始位。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_initial_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "initial_pose",
+        "connected"
+      ],
+      "notes": "机械臂已连接时，可直接执行初始位动作。"
+    },
+    {
+      "id": "simple_arm_status_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "检查机械臂当前状态。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "status"
+      ],
+      "notes": "用户只要求检查机械臂状态，应调用状态查询工具。"
+    },
+    {
+      "id": "simple_arm_connect_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "连接机械臂。",
+      "initial_state": {
+        "arms_connected": false
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "connect"
+      ],
+      "notes": "明确连接机械臂，流程评估中允许 Connect_Arms 使用默认连接参数。"
+    },
+    {
+      "id": "simple_arm_profile_connect_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "读取机械臂连接配置后连接机械臂。",
+      "initial_state": {
+        "arms_connected": false
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Profile",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "profile",
+        "connect"
+      ],
+      "notes": "用户明确要求先读取连接配置，再建立机械臂连接。"
+    },
+    {
+      "id": "simple_arm_actions_query_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "查看机械臂动作库里有哪些动作。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Actions",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "actions",
+        "query"
+      ],
+      "notes": "用户只要求查询动作库，应调用 Get_Arm_Actions。"
+    },
+    {
+      "id": "simple_arm_capture_joint_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把当前右臂姿态记录为采集位示教点，编号 jp_001。",
+      "initial_state": {
+        "arms_connected": true
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Joint_Point",
+            "args": {
+              "point_id": "jp_001",
+              "name": "采集位示教点",
+              "arm_side": "right"
+            },
+            "key_args": [
+              "point_id",
+              "name",
+              "arm_side"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "joint_point",
+        "capture"
+      ],
+      "notes": "用户明确要求记录当前关节点，并给出编号、名称和右臂信息。"
+    },
+    {
+      "id": "simple_arm_shutdown_pose_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂移动到收纳位。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_shutdown_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "shutdown_pose",
+        "connected"
+      ],
+      "notes": "机械臂已连接时，可直接执行收纳位动作。"
+    },
+    {
+      "id": "simple_nav_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "导航到采集点5。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          },
+          {
+            "waypoint_id": "wp_010",
+            "waypoint_name": "采集点10"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "waypoint",
+        "name_match"
+      ],
+      "notes": "当前无导航任务，且初始状态已提供目标点位，可直接导航。"
+    },
+    {
+      "id": "simple_nav_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "导航到采集点6。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          },
+          {
+            "waypoint_id": "wp_010",
+            "waypoint_name": "采集点10"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "waypoint",
+        "name_match"
+      ],
+      "notes": "当前无导航任务，且初始状态已提供目标点位，可直接导航。"
+    },
+    {
+      "id": "simple_nav_lookup_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "查看当前有哪些本地采集点。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "waypoints",
+        "query"
+      ],
+      "notes": "用户只要求查看本地点位，应调用点位查询工具。"
+    },
+    {
+      "id": "simple_nav_cancel_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "取消当前导航任务。",
+      "initial_state": {
+        "navigation": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Cancel_Navigation",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "cancel",
+        "running"
+      ],
+      "notes": "明确取消正在运行的导航任务。"
+    },
+    {
+      "id": "simple_nav_stop_move_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "别再移动了，停止当前导航。",
+      "initial_state": {
+        "navigation": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Cancel_Navigation",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "stop",
+        "running"
+      ],
+      "notes": "用户要求停止移动，应取消当前导航。"
+    },
+    {
+      "id": "simple_nav_capture_point_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把当前位置记录为采集点7，编号 wp_007。",
+      "initial_state": {
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {
+              "waypoint_id": "wp_007",
+              "waypoint_name": "采集点7"
+            },
+            "key_args": [
+              "waypoint_id",
+              "waypoint_name"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "capture_point"
+      ],
+      "notes": "用户明确要求记录当前位置，并给出点位编号和名称。"
+    },
+    {
+      "id": "simple_nav_capture_then_check_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把当前位置记录为“采集点8”，wp_008，并在本地文件种确认点位已经保存。",
+      "initial_state": {
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {
+              "waypoint_id": "wp_008",
+              "waypoint_name": "采集点8"
+            },
+            "key_args": [
+              "waypoint_id",
+              "waypoint_name"
+            ]
+          },
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "capture_point",
+        "verify"
+      ],
+      "notes": "用户要求记录并确认保存，先记录当前点位，再查询本地点位。"
+    },
+    {
+      "id": "simple_nav_name_match_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "导航到温室A区1号点。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_a01",
+            "waypoint_name": "温室A区1号点"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_a01"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "waypoint",
+        "name_match"
+      ],
+      "notes": "根据初始状态中的点位名称匹配真实 waypoint_id。"
+    },
+    {
+      "id": "simple_nav_id_confirmed_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "导航到 wp_010。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          },
+          {
+            "waypoint_id": "wp_010",
+            "waypoint_name": "采集点10"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_010"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "navigation",
+        "waypoint_id",
+        "confirmed"
+      ],
+      "notes": "用户给出的 waypoint_id 存在于初始状态，可直接导航。"
+    },
+    {
+      "id": "simple_lift_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把滑台升到 120 毫米。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 120
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "base",
+        "lift",
+        "height_mm"
+      ],
+      "notes": "用户明确给出滑台目标高度。"
+    },
+    {
+      "id": "simple_lift_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把滑台降到 0 毫米。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 0
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "base",
+        "lift",
+        "height_mm"
+      ],
+      "notes": "用户明确给出滑台目标高度为 0 mm。"
+    },
+    {
+      "id": "simple_lift_003",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把滑台升到最高 250 毫米。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 250
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "base",
+        "lift",
+        "height_mm"
+      ],
+      "notes": "用户明确给出滑台目标高度为 250 mm。"
+    },
+    {
+      "id": "simple_lift_004",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把滑台调整到 80 毫米的采集高度。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 80
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "base",
+        "lift",
+        "height_mm"
+      ],
+      "notes": "用户明确给出采集高度数值。"
+    },
+    {
+      "id": "simple_combo_arm_save_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂到采集位后保存 RGB-D 数据。",
+      "initial_state": {
+        "arms_connected": true,
+        "camera": "RUNNING",
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_collect_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "arm",
+        "camera",
+        "save"
+      ],
+      "notes": "机械臂和相机前置状态均满足，按用户顺序执行动作并保存。"
+    },
+    {
+      "id": "simple_combo_arm_save_002",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂到采集位后保存 RGB-D 数据。",
+      "initial_state": {
+        "arms_connected": true,
+        "camera": "STOPPED",
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_collect_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "arm",
+        "camera",
+        "precondition"
+      ],
+      "notes": "机械臂已连接但相机未运行，先执行到位动作，再启动相机并保存。"
+    },
+    {
+      "id": "simple_combo_connect_camera_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "连接机械臂并启动相机。",
+      "initial_state": {
+        "arms_connected": false,
+        "camera": "STOPPED"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "arm",
+        "camera",
+        "connect_start"
+      ],
+      "notes": "用户明确要求两个简单准备动作，按指令顺序调用。"
+    },
+    {
+      "id": "simple_combo_query_nav_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "先查看本地点位，再导航到采集点5。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          },
+          {
+            "waypoint_id": "wp_010",
+            "waypoint_name": "采集点10"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "navigation",
+        "query_then_nav"
+      ],
+      "notes": "用户明确要求先查看点位，再导航到已知采集点。"
+    },
+    {
+      "id": "simple_combo_query_action_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "先查看动作库，再让机械臂回到初始位。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "act_collect_01",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "act_initial_01",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "act_shutdown_01",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Actions",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "act_initial_01"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "arm",
+        "query_then_action"
+      ],
+      "notes": "用户明确要求先查看动作库，再执行初始位动作。"
+    },
+    {
+      "id": "simple_combo_camera_preview_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "先启动相机，再获取最新一帧画面。",
+      "initial_state": {
+        "camera": "STOPPED"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "camera",
+        "explicit_order"
+      ],
+      "notes": "用户明确指定启动后获取最新帧。"
+    },
+    {
+      "id": "simple_combo_shutdown_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "任务结束，关闭相机并断开机械臂。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Disconnect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "shutdown",
+        "release"
+      ],
+      "notes": "普通任务收尾，不涉及急停，关闭相机后断开机械臂。"
+    },
+    {
+      "id": "simple_combo_cancel_capture_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "先取消当前导航，再把当前位置记录为“临时点”，即tmp_001。",
+      "initial_state": {
+        "navigation": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Cancel_Navigation",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Capture_Current_Point",
+            "args": {
+              "waypoint_id": "tmp_001",
+              "waypoint_name": "临时点"
+            },
+            "key_args": [
+              "waypoint_id",
+              "waypoint_name"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "navigation",
+        "cancel_then_capture"
+      ],
+      "notes": "用户明确要求先取消导航，再记录当前位置。"
+    },
+    {
+      "id": "simple_combo_arm_camera_status_001",
+      "metric": "simple_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "检查机械臂状态和相机状态。",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Status",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Get_Camera_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "combo",
+        "status",
+        "arm",
+        "camera"
+      ],
+      "notes": "用户要求检查两个模块状态，按指令涉及模块调用状态查询工具。"
+    }
+  ]
+}

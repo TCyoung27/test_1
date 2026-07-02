@@ -1,0 +1,1215 @@
+{
+  "schema_version": "v1",
+  "dataset_name": "single_tool",
+  "description": "单工具调用正确率评估数据集：覆盖所有真实 MCP 工具，并加入同义表达与易混淆表达；只评估工具选择，不评估参数。",
+  "samples": [
+    {
+      "id": "single_camera_start_001",
+      "metric": "single_tool",
+      "user_instruction": "启动 RealSense 相机",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "start"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_start_002",
+      "metric": "single_tool",
+      "user_instruction": "打开相机线程",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "start",
+        "paraphrase"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_start_003",
+      "metric": "single_tool",
+      "user_instruction": "让 D435i 相机开始运行",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "start",
+        "d435i"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_stop_001",
+      "metric": "single_tool",
+      "user_instruction": "关闭相机采集",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "stop"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_stop_002",
+      "metric": "single_tool",
+      "user_instruction": "停止 RealSense 摄像头线程",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "stop",
+        "paraphrase"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_status_001",
+      "metric": "single_tool",
+      "user_instruction": "查询相机状态",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Camera_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "status"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_status_002",
+      "metric": "single_tool",
+      "user_instruction": "看看相机现在是 RUNNING 还是 STOPPED",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Camera_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "status",
+        "state_query"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_frame_001",
+      "metric": "single_tool",
+      "user_instruction": "获取最新一帧 RGB-D 画面",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "frame"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_frame_002",
+      "metric": "single_tool",
+      "user_instruction": "实时看一下当前相机画面",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "frame",
+        "preview"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_save_001",
+      "metric": "single_tool",
+      "user_instruction": "保存当前 RGB-D 数据",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "save"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_save_002",
+      "metric": "single_tool",
+      "user_instruction": "后台保存一段时间的彩色和深度帧",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "save",
+        "background"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_camera_save_003",
+      "metric": "single_tool",
+      "user_instruction": "采集并保存 30 秒帧数据",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "camera",
+        "save",
+        "duration"
+      ],
+      "notes": "单工具指标只比较工具名，不评估 duration_seconds 参数"
+    },
+    {
+      "id": "single_arm_status_001",
+      "metric": "single_tool",
+      "user_instruction": "检查机械臂忙闲状态",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "status"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_status_002",
+      "metric": "single_tool",
+      "user_instruction": "看看机械臂是否已经连接",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "status",
+        "connection_query"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_profile_001",
+      "metric": "single_tool",
+      "user_instruction": "读取机械臂连接配置",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Profile",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "profile"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_profile_002",
+      "metric": "single_tool",
+      "user_instruction": "获取机械臂型号和左右臂 IP",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Profile",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "profile",
+        "ip"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_connect_001",
+      "metric": "single_tool",
+      "user_instruction": "连接机械臂",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "connect"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_connect_002",
+      "metric": "single_tool",
+      "user_instruction": "按默认配置建立机械臂连接",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "connect",
+        "default"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_disconnect_001",
+      "metric": "single_tool",
+      "user_instruction": "断开机械臂连接",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Disconnect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "disconnect"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_disconnect_002",
+      "metric": "single_tool",
+      "user_instruction": "释放所有机械臂资源",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Disconnect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "disconnect",
+        "release"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_joint_capture_001",
+      "metric": "single_tool",
+      "user_instruction": "记录当前机械臂关节点",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Joint_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "joint_point",
+        "capture"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_joint_capture_002",
+      "metric": "single_tool",
+      "user_instruction": "把右臂当前关节姿态保存成点位",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Joint_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "joint_point",
+        "capture"
+      ],
+      "notes": "单工具指标不评估 point_id/name/arm_side 参数"
+    },
+    {
+      "id": "single_arm_actions_001",
+      "metric": "single_tool",
+      "user_instruction": "查看动作库",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Actions",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "actions"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_actions_002",
+      "metric": "single_tool",
+      "user_instruction": "列出可执行的机械臂动作 ID",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Actions",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "actions",
+        "action_id"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_execute_001",
+      "metric": "single_tool",
+      "user_instruction": "执行机械臂预设动作",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "execute"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_execute_002",
+      "metric": "single_tool",
+      "user_instruction": "让机械臂运行动作库里的某个动作",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "execute",
+        "action_library"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_emergency_001",
+      "metric": "single_tool",
+      "user_instruction": "机械臂急停",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Emergency_Stop",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "safety",
+        "emergency"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_emergency_002",
+      "metric": "single_tool",
+      "user_instruction": "危险，立即停止机械臂",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Emergency_Stop",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "safety",
+        "emergency"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_emergency_003",
+      "metric": "single_tool",
+      "user_instruction": "中断机械臂正在执行的动作",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Emergency_Stop",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "safety",
+        "interrupt"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_arm_emergency_004",
+      "metric": "single_tool",
+      "user_instruction": "不要动机械臂了，马上停",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Emergency_Stop",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "arm",
+        "safety",
+        "stop"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_waypoints_001",
+      "metric": "single_tool",
+      "user_instruction": "列出本地点位",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "waypoints"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_waypoints_002",
+      "metric": "single_tool",
+      "user_instruction": "查看 waypoints.json 中有哪些采集点",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "waypoints",
+        "file"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_waypoints_003",
+      "metric": "single_tool",
+      "user_instruction": "查询可用导航点位",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "waypoints",
+        "query"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_navigation_001",
+      "metric": "single_tool",
+      "user_instruction": "导航到指定点位",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "navigation"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_navigation_002",
+      "metric": "single_tool",
+      "user_instruction": "去 wp_005 这个点",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "navigation",
+        "waypoint_id"
+      ],
+      "notes": "单工具指标不评估 waypoint_id 参数"
+    },
+    {
+      "id": "single_base_navigation_003",
+      "metric": "single_tool",
+      "user_instruction": "移动小车到采集点5",
+      "initial_state": {
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "navigation",
+        "waypoint_name"
+      ],
+      "notes": "initial_state 已提供点位映射，单工具指标只评估工具名"
+    },
+    {
+      "id": "single_base_capture_point_001",
+      "metric": "single_tool",
+      "user_instruction": "打点保存当前位置",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "capture_point"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_capture_point_002",
+      "metric": "single_tool",
+      "user_instruction": "把当前位置记录为新的导航点",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "capture_point",
+        "waypoint"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_capture_point_003",
+      "metric": "single_tool",
+      "user_instruction": "采集当前底盘位置并保存到点位库",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "capture_point",
+        "pose"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_cancel_nav_001",
+      "metric": "single_tool",
+      "user_instruction": "取消导航",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Cancel_Navigation",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "cancel_navigation"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_cancel_nav_002",
+      "metric": "single_tool",
+      "user_instruction": "停止当前小车导航任务",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Cancel_Navigation",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "cancel_navigation",
+        "stop"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_cancel_nav_003",
+      "metric": "single_tool",
+      "user_instruction": "别再移动了，取消当前行进",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Cancel_Navigation",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "cancel_navigation",
+        "safety_phrase"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_lift_001",
+      "metric": "single_tool",
+      "user_instruction": "把滑台升到目标高度",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "lift"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_base_lift_002",
+      "metric": "single_tool",
+      "user_instruction": "设置滑台高度为 120 毫米",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "lift",
+        "height_mm"
+      ],
+      "notes": "单工具指标不评估 height_mm 参数"
+    },
+    {
+      "id": "single_base_lift_003",
+      "metric": "single_tool",
+      "user_instruction": "调整升降滑台到指定绝对高度",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "base",
+        "lift",
+        "absolute_height"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "single_mix_waypoints_001",
+      "metric": "single_tool",
+      "user_instruction": "我想看看有哪些点位，然后再决定去哪",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "base",
+        "waypoints"
+      ],
+      "notes": "强调查询点位，不是直接导航"
+    },
+    {
+      "id": "single_mix_actions_001",
+      "metric": "single_tool",
+      "user_instruction": "我想看看动作库里有哪些动作，不要执行",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Actions",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "arm",
+        "actions"
+      ],
+      "notes": "强调查询动作库，不是执行动作"
+    },
+    {
+      "id": "single_mix_frame_001",
+      "metric": "single_tool",
+      "user_instruction": "只是看一帧画面，不保存",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "camera",
+        "frame"
+      ],
+      "notes": "区分实时查看与保存数据"
+    },
+    {
+      "id": "single_mix_save_001",
+      "metric": "single_tool",
+      "user_instruction": "只是保存帧数据，不需要实时预览",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "camera",
+        "save"
+      ],
+      "notes": "区分保存数据与获取最新帧"
+    },
+    {
+      "id": "single_mix_profile_001",
+      "metric": "single_tool",
+      "user_instruction": "先看机械臂连接画像，不要马上连接",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Profile",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "arm",
+        "profile"
+      ],
+      "notes": "区分连接配置查询与实际连接"
+    },
+    {
+      "id": "single_mix_camera_status_001",
+      "metric": "single_tool",
+      "user_instruction": "检查相机有没有启动，不要启动",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Camera_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "camera",
+        "status"
+      ],
+      "notes": "区分状态查询与启动相机"
+    },
+    {
+      "id": "single_mix_arm_status_001",
+      "metric": "single_tool",
+      "user_instruction": "先确认机械臂忙不忙，不要执行动作",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Status",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "arm",
+        "status"
+      ],
+      "notes": "区分状态查询与执行动作"
+    },
+    {
+      "id": "single_mix_camera_stop_001",
+      "metric": "single_tool",
+      "user_instruction": "需要停止采集线程，但不是保存数据",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "camera",
+        "stop"
+      ],
+      "notes": "区分停止相机与保存帧"
+    },
+    {
+      "id": "single_mix_capture_point_001",
+      "metric": "single_tool",
+      "user_instruction": "保存当前位置为导航点，不是导航过去",
+      "initial_state": {},
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "base",
+        "capture_point"
+      ],
+      "notes": "区分记录点位与导航到点位"
+    },
+    {
+      "id": "single_mix_navigation_001",
+      "metric": "single_tool",
+      "user_instruction": "去已经给出的 wp_005 点位",
+      "initial_state": {
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "scoring_mode": "single_tool",
+      "tags": [
+        "mixed",
+        "base",
+        "navigation"
+      ],
+      "notes": "已有明确点位 ID 时，核心工具是导航"
+    }
+  ]
+}

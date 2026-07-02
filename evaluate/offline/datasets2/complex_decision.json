@@ -1,0 +1,2056 @@
+{
+  "schema_version": "v1",
+  "dataset_name": "complex_decision",
+  "description": "复杂决策正确率评估数据集：评估多步骤任务拆解、状态复用、前置步骤补齐、保存参数填写和不过度扩展。已清理默认参数关键判断，并统一完整采集链路顺序。",
+  "samples": [
+    {
+      "id": "complex_collect_cold_001",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5完成一次 10 秒 RGB-D 数据采集，采集后机械臂回到初始位。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "cold_start",
+        "phenotype_collection"
+      ],
+      "notes": "完整采集冷启动：导航、连接机械臂、到采集位、启动相机、保存、复位。"
+    },
+    {
+      "id": "complex_collect_ready_002",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5完成一次 10 秒 RGB-D 数据采集，采集后机械臂回到初始位。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "reuse_state",
+        "phenotype_collection"
+      ],
+      "notes": "相机已运行且机械臂已连接时，跳过启动和连接。"
+    },
+    {
+      "id": "complex_collect_camera_stopped_003",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点6采集 10 秒 RGB-D 数据，完成后让机械臂回初始位。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "camera_precondition",
+        "phenotype_collection"
+      ],
+      "notes": "仅相机未启动时补 Start_Camera。"
+    },
+    {
+      "id": "complex_collect_arm_disconnected_004",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点6采集 10 秒 RGB-D 数据，采集后机械臂回初始位。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "arm_precondition",
+        "phenotype_collection"
+      ],
+      "notes": "相机已运行但机械臂未连接时补 Connect_Arms。"
+    },
+    {
+      "id": "complex_collect_with_save_args_005",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5采集 RGB-D 数据，保存 30 秒到 D:/phenotype/plot5，完成后机械臂回初始位。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "save_dir": "D:/phenotype/plot5",
+              "duration_seconds": 30
+            },
+            "key_args": [
+              "save_dir",
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "save_args",
+        "phenotype_collection"
+      ],
+      "notes": "复杂任务中包含保存目录和保存时长参数。"
+    },
+    {
+      "id": "complex_collect_with_lift_006",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5，把滑台升到 120 mm 后采集 10 秒 RGB-D 数据，采集后机械臂回初始位。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 120
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "lift",
+        "phenotype_collection"
+      ],
+      "notes": "采集前需要设置滑台高度。"
+    },
+    {
+      "id": "complex_collect_depth_only_007",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5采集 20 秒深度数据，不保存彩色图，采集后回初始位。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 20,
+              "save_color": false
+            },
+            "key_args": [
+              "duration_seconds",
+              "save_color"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "depth_only",
+        "save_args"
+      ],
+      "notes": "仅保存深度数据时，关键判断为保存时长和关闭彩色图；默认的 save_depth=true 不作为关键参数。"
+    },
+    {
+      "id": "complex_collect_color_only_008",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点6采集 15 秒彩色图像，不保存深度图，采集后回初始位。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 15,
+              "save_depth": false
+            },
+            "key_args": [
+              "duration_seconds",
+              "save_depth"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "color_only",
+        "save_args"
+      ],
+      "notes": "仅保存彩色图像时，关键判断为保存时长和关闭深度图；默认的 save_color=true 不作为关键参数。"
+    },
+    {
+      "id": "complex_collect_two_points_009",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "依次去采集点5和采集点6，各采集 10 秒 RGB-D 数据，每次采集后机械臂回初始位。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "multi_point",
+        "full_task",
+        "phenotype_collection"
+      ],
+      "notes": "多点采集链路，测试重复序列与顺序。"
+    },
+    {
+      "id": "complex_collect_two_points_cold_010",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "依次去采集点5和采集点6，各采集 10 秒 RGB-D 数据，每个点采集后机械臂回初始位。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "multi_point",
+        "cold_start",
+        "phenotype_collection"
+      ],
+      "notes": "多点采集冷启动：连接机械臂一次；相机在首次到达采集位后启动一次，后续保持运行。"
+    },
+    {
+      "id": "complex_nav_arm_pose_011",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5，并让机械臂移动到采集位，暂时不保存图像。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "navigation",
+        "arm_pose"
+      ],
+      "notes": "用户只要求导航和机械臂就位，不扩展到相机采集。"
+    },
+    {
+      "id": "complex_nav_lift_camera_012",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点6，将滑台升到 80 mm，然后保存 10 秒 RGB-D 数据，不需要移动机械臂。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 80
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "navigation",
+        "lift",
+        "camera"
+      ],
+      "notes": "不涉及机械臂动作时不要自动连接或执行动作。"
+    },
+    {
+      "id": "complex_current_point_collect_013",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "不移动小车，在当前位置完成一次 10 秒 RGB-D 采集，采集后机械臂回初始位。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "current_position",
+        "phenotype_collection"
+      ],
+      "notes": "当前位置采集，不应添加导航步骤。"
+    },
+    {
+      "id": "complex_preview_then_save_014",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "启动相机，先预览一帧 RGB-D 画面，再保存 10 秒 RGB-D 数据。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "preview",
+        "save"
+      ],
+      "notes": "视觉模块复杂链路：启动、预览、保存。"
+    },
+    {
+      "id": "complex_preview_quality_save_015",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "相机已经运行，先用质量 80 获取最新一帧画面，再保存 20 秒数据。",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {
+              "quality": 80
+            },
+            "key_args": [
+              "quality"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 20
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "camera",
+        "preview",
+        "quality",
+        "save"
+      ],
+      "notes": "相机已运行时不重复启动，保留质量和时长参数。"
+    },
+    {
+      "id": "complex_capture_waypoint_then_verify_016",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把当前位置记录为点位，waypoint_id 为 wp_010，waypoint_name 为临时采集点，然后查看本地点位列表确认。",
+      "initial_state": {
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {
+              "waypoint_id": "wp_010",
+              "waypoint_name": "临时采集点"
+            },
+            "key_args": [
+              "waypoint_id",
+              "waypoint_name"
+            ]
+          },
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "waypoint_management",
+        "capture",
+        "verify"
+      ],
+      "notes": "记录点位后查询本地点位。"
+    },
+    {
+      "id": "complex_capture_waypoint_then_nav_017",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把当前位置记录为点位，waypoint_id 为 wp_011，waypoint_name 为备用点，然后导航到这个新点位。",
+      "initial_state": {
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Point",
+            "args": {
+              "waypoint_id": "wp_011",
+              "waypoint_name": "备用点"
+            },
+            "key_args": [
+              "waypoint_id",
+              "waypoint_name"
+            ]
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_011"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "waypoint_management",
+        "capture",
+        "navigate"
+      ],
+      "notes": "新建点位后使用同一 waypoint_id 发起导航。"
+    },
+    {
+      "id": "complex_check_waypoints_then_nav_018",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "先查看本地点位列表，然后导航到采集点5。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "waypoint_management",
+        "explicit_check",
+        "navigation"
+      ],
+      "notes": "用户明确要求先查看点位列表。"
+    },
+    {
+      "id": "complex_arm_init_by_profile_019",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "读取机械臂连接配置，连接机械臂，然后让机械臂回到初始位。",
+      "initial_state": {
+        "arms_connected": false,
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Profile",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "profile",
+        "connect",
+        "initial"
+      ],
+      "notes": "用户明确要求读取连接配置后连接并回初始位。"
+    },
+    {
+      "id": "complex_arm_actions_then_collect_020",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "先查看机械臂动作库，然后执行采集位动作，再回到初始位。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Arm_Actions",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "action_library",
+        "collect",
+        "initial"
+      ],
+      "notes": "用户明确要求先查看动作库。"
+    },
+    {
+      "id": "complex_joint_capture_then_action_021",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "记录右臂当前关节点为 point_id jp_001、名称 右臂观察位，然后执行采集位动作。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Capture_Current_Joint_Point",
+            "args": {
+              "point_id": "jp_001",
+              "name": "右臂观察位",
+              "arm_side": "right"
+            },
+            "key_args": [
+              "point_id",
+              "name",
+              "arm_side"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "joint_point",
+        "action"
+      ],
+      "notes": "记录关节点后执行动作。"
+    },
+    {
+      "id": "complex_lift_then_current_capture_022",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "把滑台升到 150 mm，然后在当前位置保存 20 秒 RGB-D 数据。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 150
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 20
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "lift",
+        "camera",
+        "save"
+      ],
+      "notes": "滑台到位后启动相机并保存。"
+    },
+    {
+      "id": "complex_lift_preview_save_023",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "滑台降到 30 mm 后，获取一帧画面检查，再保存 10 秒 RGB-D 数据。",
+      "initial_state": {
+        "camera": "RUNNING"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Set_Lift_Height",
+            "args": {
+              "height_mm": 30
+            },
+            "key_args": [
+              "height_mm"
+            ]
+          },
+          {
+            "tool": "Get_Latest_Frame",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "lift",
+        "preview",
+        "save"
+      ],
+      "notes": "滑台调整、预览、保存组合。"
+    },
+    {
+      "id": "complex_collect_then_stop_camera_024",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5采集 10 秒 RGB-D 数据，采集后机械臂回初始位，并关闭相机。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "camera_release",
+        "phenotype_collection"
+      ],
+      "notes": "完整采集后关闭相机。"
+    },
+    {
+      "id": "complex_collect_then_disconnect_025",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点6采集 10 秒 RGB-D 数据，采集完成后机械臂回初始位并断开机械臂连接。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Disconnect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "arm_release",
+        "phenotype_collection"
+      ],
+      "notes": "完整采集后释放机械臂连接。"
+    },
+    {
+      "id": "complex_collect_then_full_release_026",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "去采集点5采集 10 秒 RGB-D 数据，完成后机械臂回初始位，关闭相机并断开机械臂。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Stop_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Disconnect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "full_task",
+        "release",
+        "phenotype_collection"
+      ],
+      "notes": "完整采集并执行正常收尾释放，不涉及急停。"
+    },
+    {
+      "id": "complex_arm_shutdown_release_027",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "让机械臂移动到收纳位，然后断开机械臂连接。",
+      "initial_state": {
+        "arms_connected": true,
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          },
+          {
+            "action_id": "arm_shutdown_A",
+            "action_name": "收纳位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_shutdown_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          },
+          {
+            "tool": "Disconnect_Arms",
+            "args": {},
+            "key_args": []
+          }
+        ]
+      },
+      "tags": [
+        "arm",
+        "shutdown",
+        "release"
+      ],
+      "notes": "机械臂正常收纳与断开。"
+    },
+    {
+      "id": "complex_nav_only_check_then_go_028",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "只需要先查看点位列表，再导航到采集点6，不要进行采集。",
+      "initial_state": {
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          },
+          {
+            "waypoint_id": "wp_006",
+            "waypoint_name": "采集点6"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Get_Local_Waypoints",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_006"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "navigation_only",
+        "explicit_check"
+      ],
+      "notes": "用户明确不要采集，不应添加机械臂或相机步骤。"
+    },
+    {
+      "id": "complex_arm_pose_only_029",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "只把机械臂移动到采集位，不启动相机，也不保存数据。",
+      "initial_state": {
+        "arms_connected": false,
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "arm_only"
+      ],
+      "notes": "只涉及机械臂动作，不扩展相机保存。"
+    },
+    {
+      "id": "complex_camera_save_only_030",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "只保存 25 秒 RGB-D 数据到 E:/rgbd/test，不移动小车和机械臂。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": true,
+        "navigation": "IDLE"
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Start_Camera",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "save_dir": "E:/rgbd/test",
+              "duration_seconds": 25
+            },
+            "key_args": [
+              "save_dir",
+              "duration_seconds"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "camera_only",
+        "save_args"
+      ],
+      "notes": "只保存相机数据，不添加导航或机械臂。"
+    },
+    {
+      "id": "complex_prepare_collection_no_save_031",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "准备采集：导航到采集点5、连接机械臂并移动到采集位，暂时不要保存图像。",
+      "initial_state": {
+        "camera": "STOPPED",
+        "arms_connected": false,
+        "navigation": "IDLE",
+        "available_waypoints": [
+          {
+            "waypoint_id": "wp_005",
+            "waypoint_name": "采集点5"
+          }
+        ],
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Navigate_To_Point",
+            "args": {
+              "waypoint_id": "wp_005"
+            },
+            "key_args": [
+              "waypoint_id"
+            ]
+          },
+          {
+            "tool": "Connect_Arms",
+            "args": {},
+            "key_args": []
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_collect_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "prepare_only",
+        "no_save"
+      ],
+      "notes": "准备采集但不保存图像，不应启动相机或 Save_Frames。"
+    },
+    {
+      "id": "complex_save_then_reset_032",
+      "metric": "complex_decision",
+      "scoring_mode": "ordered_calls",
+      "user_instruction": "当前位置已经采集就绪，保存 10 秒 RGB-D 数据后让机械臂回初始位。",
+      "initial_state": {
+        "camera": "RUNNING",
+        "arms_connected": true,
+        "navigation": "IDLE",
+        "available_actions": [
+          {
+            "action_id": "arm_collect_A",
+            "action_name": "采集位"
+          },
+          {
+            "action_id": "arm_home_A",
+            "action_name": "初始位"
+          }
+        ]
+      },
+      "expected_output": {
+        "calls": [
+          {
+            "tool": "Save_Frames",
+            "args": {
+              "duration_seconds": 10
+            },
+            "key_args": [
+              "duration_seconds"
+            ]
+          },
+          {
+            "tool": "Execute_Action",
+            "args": {
+              "action_id": "arm_home_A"
+            },
+            "key_args": [
+              "action_id"
+            ]
+          }
+        ]
+      },
+      "tags": [
+        "partial_task",
+        "save",
+        "reset"
+      ],
+      "notes": "不需要导航和采集位动作，只保存并复位。"
+    }
+  ]
+}
